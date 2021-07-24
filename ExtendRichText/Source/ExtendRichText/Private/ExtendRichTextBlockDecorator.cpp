@@ -28,14 +28,10 @@ bool FExtendRichTextDecorator::Supports(const FTextRunParseResults& RunParseResu
 
 TSharedRef<FExtendRichTextDecorator> FExtendRichTextDecorator::CreateIns(SExtendRichTextEditableBox* EditableBox,UExtendRichTextBlockDecorator* decorator,URichTextBlock* richTextBlock)
 {
-	return MakeShareable(new FExtendRichTextDecorator(EditableBox, decorator, richTextBlock));
+	return MakeShareable(new FExtendRichTextDecorator());
 }
 
-FEditableRichTextDecorator::FEditableRichTextDecorator(SExtendRichTextEditableBox* EditableBox,
-	URichTextBlock* RichTextBlock)
-		:
-		EditBoxOwner(EditableBox),
-		RichTextBlockOwner(RichTextBlock)
+FEditableRichTextDecorator::FEditableRichTextDecorator()
 {
 	auto handlerClass = GetDefault<UExtendRichTextSettings>()->HandlerClass;
 	if(IsValid(handlerClass))

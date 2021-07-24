@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "ExtendRichTextCustomization.h"
 #include "ExtendRichTextModule.h"
+#include "ExtendRichTextCustomization.h"
 
 #define LOCTEXT_NAMESPACE "FExtendRichTextModule"
 

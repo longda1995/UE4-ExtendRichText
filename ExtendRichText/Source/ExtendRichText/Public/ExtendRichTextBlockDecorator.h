@@ -94,15 +94,12 @@ class SExtendRichTextEditableBox;
 class EXTENDRICHTEXT_API FEditableRichTextDecorator : public ITextDecorator
 {
 public:
-	FEditableRichTextDecorator(SExtendRichTextEditableBox* EditableBox,URichTextBlock* RichTextBlock);
+	FEditableRichTextDecorator();
 	virtual ~FEditableRichTextDecorator(){}
 	virtual TSharedRef<ISlateRun> Create(const TSharedRef<FTextLayout>& TextLayout, const FTextRunParseResults& RunInfo, const FString& OriginalText, const TSharedRef<FString>& ModelText, const ISlateStyle* Style) override;
 	virtual bool Supports(const FTextRunParseResults& RunInfo, const FString& Text) const override;
 
 protected:
-	SExtendRichTextEditableBox* EditBoxOwner;
-	//·Ç±à¼­Æ÷×´Ì¬ÏÂµÄ¸¸¿Ø¼þ
-	URichTextBlock* RichTextBlockOwner;
 	const UExtendHyperEventHandler* HyperEventHandler;
 };
 
@@ -112,13 +109,9 @@ public:
 	virtual ~FExtendRichTextDecorator() override;
 	virtual bool Supports(const FTextRunParseResults& RunParseResult, const FString& Text) const override;
 	static TSharedRef<FExtendRichTextDecorator> CreateIns(SExtendRichTextEditableBox* EditableBox = nullptr, UExtendRichTextBlockDecorator* decorator = nullptr, URichTextBlock* richTextBlock = nullptr);
-	UExtendRichTextBlockDecorator* Decorator;
 
 protected:
-	FExtendRichTextDecorator(SExtendRichTextEditableBox* EditableBox, UExtendRichTextBlockDecorator* decorator = nullptr, URichTextBlock* richTextBlock = nullptr)
-		:FEditableRichTextDecorator(EditableBox, richTextBlock)
-		, Decorator(decorator)
-	{}
+	FExtendRichTextDecorator(){}
 };
 
 
