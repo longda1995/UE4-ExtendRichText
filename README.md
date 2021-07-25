@@ -22,3 +22,6 @@ an light extension of rich text ,include editing feature
 ### 创建ExtendRichTextBlock控件
  ![image](https://user-images.githubusercontent.com/42215388/126889375-e27b6b7c-1767-4221-aa80-b73c43058d00.png)
 ### 将text设置给ExtendRichTextBlock控件
+![image](https://user-images.githubusercontent.com/42215388/126889401-b7b7f23e-76a4-4995-b32b-d879458db3f5.png)
+### 显示效果与编辑时一致
+![image](https://user-images.githubusercontent.com/42215388/126889420-9a49892d-d0e5-4f9a-a51d-a4d7c7e12ee6.png)
