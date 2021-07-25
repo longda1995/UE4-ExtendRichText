@@ -527,6 +527,20 @@ void SExtendRichTextEditorBar::OnFontSizeCommitted(const FText& text, ETextCommi
 
 FReply SExtendRichTextEditorBar::OnPainterBtnClick()
 {
+	auto selectedRuns = EditableBox->GetSelectedRuns();
+	
+	if(selectedRuns.Num() == 1)
+	{
+		FRunInfo runInfo = selectedRuns[0]->GetRunInfo();
+		if(runInfo.Name.IsEmpty())
+		{
+			
+		}
+		else if(runInfo.Name.Equals(GetDefault<UExtendRichTextSettings>()->ExtendTagName))
+		{
+			
+		}
+	}
 	return FReply::Handled();
 }
 
@@ -672,7 +686,7 @@ void SExtendRichTextEditableBox::Construct(const FArguments& InArgs)
 			.AutoWrapText(true)
 			.Margin(4)
 			.LineHeightPercentage(1.1f)
-			//.AllowMultiLine(true)
+			.OnKeyCharHandler(this,&SExtendRichTextEditableBox::OnKeyCharHandler)
 		]
 		+ SVerticalBox::Slot()
 		.AutoHeight()
@@ -978,9 +992,12 @@ TArray<TSharedRef<const IRun>> SExtendRichTextEditableBox::GetSelectedRuns()
 
 void SExtendRichTextEditableBox::EraseSelectedStyles()
 {
-	auto SelectedRuns = GetSelectedRuns();
 	auto selectedText = RichTextEditBox->GetSelectedText();
-	RichTextEditBox->InsertTextAtCursor(selectedText);
+	if(!selectedText.IsEmpty())
+	{
+		FRunInfo emptyInfo;
+		RichTextEditBox->ApplyToSelection(emptyInfo,FExtendRichTextEditBoxStyles::Get().GetWidgetStyle<FTextBlockStyle>("DefaultTextStyle"));
+	}
 }
 
 void SExtendRichTextEditableBox::InsertImageAtCursor(const FRunInfo& info, const FName resourceName, const FVector2D& size)
@@ -1033,6 +1050,12 @@ void SExtendRichTextEditableBox::HandleRichEditableTextCursorMoved(const FTextLo
 			RichTextEditorBar->SetCurrentStyleState(state);
 		}
 	}
+}
+
+FReply SExtendRichTextEditableBox::OnKeyCharHandler(const FGeometry& geo, const FCharacterEvent& event)
+{
+
+	return FReply::Handled();
 }
 
 #undef LOCTEXT_NAMESPACE

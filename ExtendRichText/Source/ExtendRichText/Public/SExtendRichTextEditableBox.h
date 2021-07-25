@@ -231,6 +231,8 @@ protected:
 	
 	uint8 CurrentColorIndex = 0;
 	SExtendRichTextEditableBox* EditableBox;
+	//当前选中的字体状态
+	FRichTextStyleState SelectedState;
 };
 
 enum class EStyleOperationCode
@@ -284,6 +286,8 @@ protected:
 	void HandleRichEditableTextCommitted(const FText& Text, ETextCommit::Type Type);
 
 	void HandleRichEditableTextCursorMoved(const FTextLocation& NewCursorPosition);
+
+	FReply OnKeyCharHandler(const FGeometry& geo,const FCharacterEvent& event);
 
 	FOnTextChanged OnTextChanged;
 	FOnTextCommitted OnTextCommitted;
