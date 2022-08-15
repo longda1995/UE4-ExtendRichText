@@ -20,6 +20,8 @@
 #include <Developer/DesktopPlatform/Public/DesktopPlatformModule.h>
 #include <Editor/UnrealEd/Public/EditorDirectories.h>
 
+#include "ExtendHyperEventHandler.h"
+
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 #define LOCTEXT_NAMESPACE "ExtendRichText"
@@ -646,7 +648,9 @@ void SExtendRichTextEditableBox::Construct(const FArguments& InArgs)
 		TArray<TSharedRef<ITextDecorator>>(),
 		&FExtendRichTextEditBoxStyles::Get()
 	);
-	RichTextMarshaller->AppendInlineDecorator(FExtendRichTextDecorator::CreateIns(this));
+	const UExtendHyperEventHandler* Handler = GetDefault<UExtendHyperEventHandler>();
+	//
+	RichTextMarshaller->AppendInlineDecorator(FExtendRichTextDecorator::CreateIns(Handler));
 	RichTextMarshaller->AppendInlineDecorator(FExtendImageDecorator::Create());
 	
 	ChildSlot
@@ -713,8 +717,7 @@ void SExtendRichTextEditableBox::HandleStyleChanged()
 				break;
 			}
 		}
-		//�ӵ�ǰ������״̬�й�����ʽ
-		FRichTextStyleState state = GetCurrentTextStyleState();
+		const FRichTextStyleState state = GetCurrentTextStyleState();
 		const FRunInfo runInfo = BuildRunInfoFromStyleState(state);
 
 		FString styleIndexStr = FString::FromInt(SerializeToUint32(state));

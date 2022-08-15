@@ -2,6 +2,7 @@
 #include "ExtendRichTextBlockDecorator.h"
 
 #include "ExtendHyperEventHandler.h"
+#include "ExtendRichTextBlock.h"
 #include "ExtendRichTextStyle.h"
 #include "ExtendRichTextSettings.h"
 #include "ExtendTextRun.h"
@@ -25,28 +26,21 @@ bool FExtendRichTextDecorator::Supports(const FTextRunParseResults& RunParseResu
 	return false;
 }
 
-TSharedRef<FExtendRichTextDecorator> FExtendRichTextDecorator::CreateIns(SExtendRichTextEditableBox* EditableBox,UExtendRichTextBlockDecorator* decorator,URichTextBlock* richTextBlock)
+TSharedRef<FExtendRichTextDecorator> FExtendRichTextDecorator::CreateIns(const UObject* ClickHandler)
 {
-	return MakeShareable(new FExtendRichTextDecorator());
+	return MakeShareable(new FExtendRichTextDecorator(ClickHandler));
 }
 
-FEditableRichTextDecorator::FEditableRichTextDecorator()
+FEditableRichTextDecorator::FEditableRichTextDecorator(const UObject* Hyper)
 {
-	auto handlerClass = GetDefault<UExtendRichTextSettings>()->HandlerClass;
-	if(IsValid(handlerClass))
+	if(Hyper->Implements<UHyperClickInterface>())
 	{
-		HyperEventHandler = GetDefault<UExtendHyperEventHandler>(handlerClass);
+		HyperEventHandler = Hyper;
 	}
-	else
-	{
-		HyperEventHandler = GetDefault<UExtendHyperEventHandler>();
-	}
-	
 }
 
-TSharedRef<ISlateRun> FEditableRichTextDecorator::Create(const TSharedRef<FTextLayout>& TextLayout,
-                                                         const FTextRunParseResults& RunParseResult, const FString& OriginalText, const TSharedRef<FString>& InOutModelText,
-                                                         const ISlateStyle* Style)
+TSharedRef<ISlateRun> FEditableRichTextDecorator::Create(const TSharedRef<FTextLayout>& TextLayout, const FTextRunParseResults& RunParseResult, 
+	const FString& OriginalText, const TSharedRef<FString>& InOutModelText,const ISlateStyle* Style)
 {
 	FRunInfo RunInfo;
 	RunInfo.Name = RunParseResult.Name;
@@ -87,9 +81,17 @@ TSharedRef<ISlateRun> FEditableRichTextDecorator::Create(const TSharedRef<FTextL
 			{
 				FExtendRichTextEditBoxStyles::Get().Set(FName(styleStr), *FExtendRichTextStyleMaker::MakeStyleByState(state));
 			}
+			typedef TMap< FString, FString > FMetadata;
+			const FSlateHyperlinkRun::FOnClick ClickHandler = FSlateHyperlinkRun::FOnClick::CreateLambda([this](const FMetadata& Meta)
+			{
+				if(const IHyperClickInterface* ClickInterface = Cast<IHyperClickInterface>(HyperEventHandler.Get()))
+				{
+					ClickInterface->OnHyperClick(FHyperMeta{Meta});
+				}
+			});
 			return FRunCreator::CreateHyperRun(RunInfo,InOutModelText,
 				FExtendRichTextEditBoxStyles::Get().GetWidgetStyle<FHyperlinkStyle>(FName(styleStr)), ModelRange,
-	FSlateHyperlinkRun::FOnClick::CreateUObject(HyperEventHandler,&UExtendHyperEventHandler::HandleOnClick_Implementation),NULL,NULL);
+				ClickHandler,nullptr,nullptr);
 		}
 	}
 	return FSlateTextRun::Create(RunInfo, InOutModelText, Style->GetWidgetStyle<FTextBlockStyle>("DefaultTextStyle"),ModelRange);
@@ -171,5 +173,5 @@ UExtendRichTextBlockDecorator::UExtendRichTextBlockDecorator(const FObjectInitia
 
 TSharedPtr<ITextDecorator> UExtendRichTextBlockDecorator::CreateDecorator(URichTextBlock* InOwner)
 {
-	return FExtendRichTextDecorator::CreateIns(nullptr,this,InOwner);
+	return FExtendRichTextDecorator::CreateIns(InOwner);
 }

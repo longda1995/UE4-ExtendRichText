@@ -9,7 +9,6 @@ void FExtendRichTextModule::StartupModule()
 {
 	FPropertyEditorModule& PropertyEditorModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor");
 	PropertyEditorModule.RegisterCustomPropertyTypeLayout("ExtendRichText", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FExtendRichTextCustomization::MakeInstance));
-	
 }
 
 void FExtendRichTextModule::ShutdownModule()

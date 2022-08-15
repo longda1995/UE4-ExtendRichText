@@ -2,7 +2,6 @@
 
 
 #include "ExtendRichTextBlock.h"
-
 #include "ExtendRichTextBlockDecorator.h"
 #include "ExtendRichTextMarshaller.h"
 #include "ExtendRichTextStyle.h"
@@ -14,9 +13,10 @@ TSharedRef<SWidget> UExtendRichTextBlock::RebuildWidget()
 	TArray<TSharedRef<class ITextDecorator>> Decorators;
 	CreateDecorators(Decorators);
 
-	TSharedRef<FExtendRichTextMarshaller> Marshaller = FExtendRichTextMarshaller::Create(Decorators, StyleInstance.Get());
+	const TSharedRef<FExtendRichTextMarshaller> Marshaller = FExtendRichTextMarshaller::Create(Decorators, StyleInstance.Get());
+	const TSharedRef<FExtendRichTextDecorator> TextDeco = FExtendRichTextDecorator::CreateIns(this);
 
-	Marshaller->AppendInlineDecorator(FExtendRichTextDecorator::CreateIns());
+	Marshaller->AppendInlineDecorator(TextDeco);
 	Marshaller->AppendInlineDecorator(FExtendImageDecorator::Create());
 	
 	MyRichTextBlock = SNew(SRichTextBlock)
@@ -24,5 +24,10 @@ TSharedRef<SWidget> UExtendRichTextBlock::RebuildWidget()
 		.Marshaller(Marshaller);
 
 	return MyRichTextBlock.ToSharedRef();
+}
+
+void UExtendRichTextBlock::OnHyperClick(const FHyperMeta& Meta)const
+{
+	OnHyperLinkClickFunc.Broadcast(Meta);
 }
  

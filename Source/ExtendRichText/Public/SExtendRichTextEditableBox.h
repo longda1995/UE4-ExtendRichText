@@ -251,13 +251,9 @@ class EXTENDRICHTEXT_API SExtendRichTextEditableBox : public SCompoundWidget
 {
 public:
 	SLATE_BEGIN_ARGS(SExtendRichTextEditableBox){}
-	
 	SLATE_ATTRIBUTE(FText,Text)
-
 	SLATE_ARGUMENT(FOnTextCommitted,OnTextCommitted)
-
 	SLATE_ARGUMENT(FOnTextChanged,OnTextChanged)
-	
 	SLATE_END_ARGS()
 
 	/** Constructs this widget with InArgs */
@@ -287,7 +283,7 @@ protected:
 
 	FOnTextChanged OnTextChanged;
 	FOnTextCommitted OnTextCommitted;
-	//���ı��༭������
+	//
 	TSharedPtr<SExtendRichTextEditorBar> RichTextEditorBar;
 	TSharedPtr<SMultiLineEditableTextBox> RichTextEditBox;
 	TSharedPtr<SHyperLinkBar> HyperLinkBar;
