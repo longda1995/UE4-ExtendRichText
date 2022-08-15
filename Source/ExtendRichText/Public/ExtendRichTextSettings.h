@@ -1,10 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Engine/DeveloperSettings.h"
-#include "Engine/DataTable.h"
 #include "ExtendRichTextSettings.generated.h"
 
 class UExtendHyperEventHandler;
@@ -16,9 +13,9 @@ class EXTENDRICHTEXT_API UExtendRichTextSettings : public UDeveloperSettings
 {
 	GENERATED_BODY()
 public:
-	UExtendRichTextSettings(){}
+	UExtendRichTextSettings();
 	// UDeveloperSettings interface
-// Gets the settings container name for the settings, either Project or Editor
+	// Gets the settings container name for the settings, either Project or Editor
 	FName GetContainerName() const override { return TEXT("Project"); }
 	// Gets the category for the settings, some high level grouping like, Editor, Engine, Game...etc.
 	FName GetCategoryName() const override { return TEXT("Editor"); };
@@ -35,11 +32,7 @@ public:
 	bool SupportsAutoRegistration() const override { return true; }
 
 	// UObject interface
-#if ENGINE_MINOR_VERSION >= 25
 	bool CanEditChange(const FProperty* InProperty) const override;
-#else
-	bool CanEditChange(const UProperty* InProperty) const override;
-#endif
 
 	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif // WITH_EDITOR
@@ -48,7 +41,7 @@ public:
 		FString ExtendTagName;
 
 	UPROPERTY(EditAnywhere, Config, Category = ExtendRichTextStyle)
-		uint16 TextDefaultSize;
+		uint8 TextDefaultSize = 12;
 
 	UPROPERTY(EditAnywhere, Config, Category = ExtendRichTextStyle)
 		TArray<FLinearColor> TextColors;
@@ -59,7 +52,7 @@ public:
 	UPROPERTY(EditAnywhere, Config, Category = ExtendRichTextStyle)
 		TArray<uint8>  DefaultFontSizeList;
 
-	//³¬Á´ÊÂ¼þ´¦ÀíÆ÷
+	//ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	UPROPERTY(EditAnywhere, Config, Category = Handler)
 		TSubclassOf<UExtendHyperEventHandler> HandlerClass;
 };

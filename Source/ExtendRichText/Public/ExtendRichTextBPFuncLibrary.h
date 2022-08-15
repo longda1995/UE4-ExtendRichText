@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "ExtendRichText.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ExtendRichTextBPFuncLibrary.generated.h"

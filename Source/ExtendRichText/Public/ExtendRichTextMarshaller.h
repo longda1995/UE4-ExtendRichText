@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "Framework/Text/RichTextLayoutMarshaller.h"
 #if WITH_FANCY_TEXT
 

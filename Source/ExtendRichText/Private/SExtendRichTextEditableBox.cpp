@@ -12,7 +12,6 @@
 #include "Framework/Text/ITextDecorator.h"
 #include "Framework/Text/RichTextLayoutMarshaller.h"
 #include "Framework/Text/SlateImageRun.h"
-#include "Framework/Text/SlateWidgetRun.h"
 #include "Styling/SlateStyle.h"
 #include "Widgets/Colors/SColorBlock.h"
 #include "Widgets/Input/SEditableTextBox.h"
@@ -266,19 +265,6 @@ void SExtendRichTextEditorBar::Construct(const FArguments& InArgs)
 	ChildSlot
 	[
 		SNew(SHorizontalBox)
-		/*ÔÝÊ±±£Áô³·ÏúÖØ×ö¹¦ÄÜ
-	 	+ SHorizontalBox::Slot()
-		.AutoWidth()
-		[
-			SNew(SButton)
-			.ButtonStyle(&GetDefault<UExtendRichTextSettings>()->UndoButtonStyle)
-		]
-		+ SHorizontalBox::Slot()
-		.AutoWidth()
-		[
-			SNew(SButton)
-			.ButtonStyle(&GetDefault<UExtendRichTextSettings>()->RedoButtonStyle)
-		]*/
 		+ SHorizontalBox::Slot()
 		.AutoWidth()
 		[
@@ -299,12 +285,13 @@ void SExtendRichTextEditorBar::Construct(const FArguments& InArgs)
 				.AutoWidth()
 				[
 					SNew(SBox)
-					.WidthOverride(25)
-					.HeightOverride(20)
+					.WidthOverride(28)
+					.HeightOverride(15)
 					[
 						SAssignNew(FontSizeInput,SEditableTextBox)
 						.Text(FText::AsNumber(GetDefault<UExtendRichTextSettings>()->TextDefaultSize))
 						.OnTextCommitted(this,&SExtendRichTextEditorBar::OnFontSizeCommitted)
+						.Font(FExtendRichTextEditBoxStyles::Get().GetFontStyle("SizeFont"))
 					]
 				]
 				+SHorizontalBox::Slot()
@@ -493,14 +480,14 @@ void SExtendRichTextEditorBar::SetFontSizeForSelectedText(uint8 newSize)
 
 FReply SExtendRichTextEditorBar::OnBoldClick()
 {
-	//·´×ª×´Ì¬
+	//ï¿½ï¿½×ª×´Ì¬
 	EditableBox->BoldSelectedText(BoldBtn->IsOccupied());
 	return FReply::Handled();
 }
 
 FReply SExtendRichTextEditorBar::OnItalicClick()
 {
-	//·´×ª×´Ì¬
+	//ï¿½ï¿½×ª×´Ì¬
 	EditableBox->ItalicSelectText(ItalicBtn->IsOccupied());
 	return FReply::Handled();
 }
@@ -651,9 +638,11 @@ void SExtendRichTextEditableBox::Construct(const FArguments& InArgs)
 {
 	OnTextCommitted = InArgs._OnTextCommitted;
 	OnTextChanged = InArgs._OnTextChanged;
+	const UExtendRichTextSettings* Setting = GetDefault<UExtendRichTextSettings>();
+	CurSize = Setting->TextDefaultSize;
+
 	//FExtendRichTextMarshaller
-	
-	TSharedRef<FExtendRichTextMarshaller> RichTextMarshaller = FExtendRichTextMarshaller::Create(
+	const TSharedRef<FExtendRichTextMarshaller> RichTextMarshaller = FExtendRichTextMarshaller::Create(
 		TArray<TSharedRef<ITextDecorator>>(),
 		&FExtendRichTextEditBoxStyles::Get()
 	);
@@ -686,7 +675,6 @@ void SExtendRichTextEditableBox::Construct(const FArguments& InArgs)
 			.AutoWrapText(true)
 			.Margin(4)
 			.LineHeightPercentage(1.1f)
-			.OnKeyCharHandler(this,&SExtendRichTextEditableBox::OnKeyCharHandler)
 		]
 		+ SVerticalBox::Slot()
 		.AutoHeight()
@@ -725,7 +713,7 @@ void SExtendRichTextEditableBox::HandleStyleChanged()
 				break;
 			}
 		}
-		//´Óµ±Ç°µÄÎÄ×Ö×´Ì¬ÖÐ¹¹½¨ÑùÊ½
+		//ï¿½Óµï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½Ð¹ï¿½ï¿½ï¿½ï¿½ï¿½Ê½
 		FRichTextStyleState state = GetCurrentTextStyleState();
 		const FRunInfo runInfo = BuildRunInfoFromStyleState(state);
 
@@ -837,7 +825,7 @@ void SExtendRichTextEditableBox::StyleSelectedText(const OperationInfo& info)
 	auto selectedText = RichTextEditBox->GetSelectedText();
 
 	RunPairs runInfosToInsert;
-	//´¦ÀíÖÐ¼äµÄRun
+	//ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½Run
 	for (int i = 0; i < selectedRuns.Num(); i++)
 	{
 		auto run = selectedRuns[i];
@@ -845,17 +833,17 @@ void SExtendRichTextEditableBox::StyleSelectedText(const OperationInfo& info)
 		run->AppendTextTo(RunText);
 
 		FString newRunContent;
-		if (i == 0 || i == selectedRuns.Num() - 1)//µÚÒ»¸ö»òÕß×îºóÒ»¸ö
+		if (i == 0 || i == selectedRuns.Num() - 1)//ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
 		{
 			auto selectTextStr = selectedText.ToString();
-			//ÍêÈ«Ñ¡ÖÐ¸ÃRun
+			//ï¿½ï¿½È«Ñ¡ï¿½Ð¸ï¿½Run
 			if (i == 0 ? selectTextStr.StartsWith(RunText) : selectTextStr.EndsWith(RunText))
 			{
 				newRunContent = RunText;
 			}
-			else//Ö»Ñ¡ÖÐ²¿·Ö
+			else//Ö»Ñ¡ï¿½Ð²ï¿½ï¿½ï¿½
 			{
-				//Èç¹ûÊÇ×îºóÒ»¸öRun£¬½«Æä·´×ªÒÔÊÊÓ¦µÚÒ»¸öËã·¨
+				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Runï¿½ï¿½ï¿½ï¿½ï¿½ä·´×ªï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ã·¨
 				if (i == selectedRuns.Num() - 1)
 				{
 					selectTextStr = selectTextStr.Reverse();
@@ -908,7 +896,7 @@ void SExtendRichTextEditableBox::StyleSelectedText(const OperationInfo& info)
 		}
 	}
 
-	//¼ÆËãÏàÁÚµÄrun
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½run
 	TArray<TArray<int>> SameRunStateArr;
 	for(int i = 0;i < runInfosToInsert.Num();i++)
 	{
@@ -935,7 +923,7 @@ void SExtendRichTextEditableBox::StyleSelectedText(const OperationInfo& info)
 		}
 	}
 
-	//ºÏ²¢ÏàÁÚµÄRun
+	//ï¿½Ï²ï¿½ï¿½ï¿½ï¿½Úµï¿½Run
 	RunPairs finalRuns;
 	for(auto runSet : SameRunStateArr)
 	{
@@ -947,7 +935,7 @@ void SExtendRichTextEditableBox::StyleSelectedText(const OperationInfo& info)
 		finalRuns.Add(MakeTuple(runInfosToInsert[runSet[0]].Key, newStr));
 	}
 
-	//½«ÐÂµÄrun²åÈëµ½ÊäÈë¿òÖÐ
+	//ï¿½ï¿½ï¿½Âµï¿½runï¿½ï¿½ï¿½ëµ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	for (auto run : finalRuns)
 	{
 		FRichTextStyleState state = run.Key;
@@ -1030,7 +1018,7 @@ void SExtendRichTextEditableBox::HandleRichEditableTextCursorMoved(const FTextLo
 	if(GetSelectedRuns().Num() > 0)
 	{
 		auto selectedRun = GetSelectedRuns()[0];
-		//todo:ÉèÖÃ
+		//todo:ï¿½ï¿½ï¿½ï¿½
 	}
 	else
 	{
@@ -1050,12 +1038,6 @@ void SExtendRichTextEditableBox::HandleRichEditableTextCursorMoved(const FTextLo
 			RichTextEditorBar->SetCurrentStyleState(state);
 		}
 	}
-}
-
-FReply SExtendRichTextEditableBox::OnKeyCharHandler(const FGeometry& geo, const FCharacterEvent& event)
-{
-
-	return FReply::Handled();
 }
 
 #undef LOCTEXT_NAMESPACE

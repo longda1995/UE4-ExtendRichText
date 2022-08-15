@@ -9,7 +9,6 @@
 #include "Components/RichTextBlock.h"
 #include "Framework/Text/SlateImageRun.h"
 #include "Framework/Text/SlateTextRun.h"
-#include "Framework/Text/SlateTextUnderlineLineHighlighter.h"
 #include "Widgets/Text/SRichTextBlock.h"
 
 FExtendRichTextDecorator::~FExtendRichTextDecorator()
@@ -61,7 +60,7 @@ TSharedRef<ISlateRun> FEditableRichTextDecorator::Create(const TSharedRef<FTextL
 	*InOutModelText += OriginalText.Mid(RunParseResult.ContentRange.BeginIndex, RunParseResult.ContentRange.EndIndex - RunParseResult.ContentRange.BeginIndex);
 	ModelRange.EndIndex = InOutModelText->Len();
 
-	//·´ÐòÁÐ»¯³Éstate
+	//ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½state
 	if (RunInfo.MetaData.Contains(TEXT("Style")))
 	{
 		FString styleStr = RunInfo.MetaData[TEXT("Style")];

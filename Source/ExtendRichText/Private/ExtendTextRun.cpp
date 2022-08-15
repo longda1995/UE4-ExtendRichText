@@ -1,10 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "ExtendTextRun.h"
-#include "Fonts/FontMeasure.h"
 #include "Framework/Text/DefaultLayoutBlock.h"
-#include "Framework/Text/RunUtils.h"
-#include "Framework/Text/ShapedTextCache.h"
 #include "Framework/Text/WidgetLayoutBlock.h"
 #include "Widgets/Input/SHyperlink.h"
 
@@ -116,13 +113,10 @@ ERunAttributes FExtendTextRun::GetRunAttributes() const
 		: HyperRun->GetRunAttributes(); 
 }
 
-int32 FExtendTextRun::OnPaint(const FPaintArgs& Args, const FTextLayout::FLineView& Line,
-	const TSharedRef<ILayoutBlock>& Block, const FTextBlockStyle& DefaultStyle, const FGeometry& AllottedGeometry,
-	const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId,
-	const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
+int32 FExtendTextRun::OnPaint(const FPaintArgs& PaintArgs, const FTextArgs& TextArgs, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
 {
-	return IsText ? TextRun->OnPaint(Args, Line, Block, DefaultStyle, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled)
-		: HyperRun->OnPaint(Args, Line, Block, DefaultStyle, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled);
+	return IsText ? TextRun->OnPaint(PaintArgs, TextArgs, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled)
+		: HyperRun->OnPaint(PaintArgs, TextArgs, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled);
 }
 
 const TArray<TSharedRef<SWidget>>& FExtendTextRun::GetChildren()

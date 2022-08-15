@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -15,8 +13,8 @@ class SMultiLineEditableTextBox;
 class SColorBlock;
 class SEditableTextBox;
 /**
- * ÖØ¸´ÀûÓÃIsPressed±äÁ¿£¬Ê¹Ö®×ªÎªÊÇ·ñÕ¼ÓÃ×´Ì¬ÓïÒå
- * ´Ë°´Å¥È¡ÏûIsPressµÄÔ­ÓÐÓïÒå
+ * ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½ï¿½IsPressedï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹Ö®×ªÎªï¿½Ç·ï¿½Õ¼ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½
+ * ï¿½Ë°ï¿½Å¥È¡ï¿½ï¿½IsPressï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  */
 class EXTENDRICHTEXT_API SButtonWithOccupyState : public SCompoundWidget
 {
@@ -93,17 +91,17 @@ public:
 	void Construct(const FArguments& InArgs);
 
 protected:
-	//³¬Á´µÄÕý³£ÑÕÉ«°´Å¥
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½Å¥
 	TSharedPtr<SBorder> CommonColorBtn;
-	//³¬Á´µÄÐü¸¡ÑÕÉ«°´Å¥
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½Å¥
 	TSharedPtr<SBorder> HoverColorBtn;
-	//³¬Á´µÄµã»÷ÑÕÉ«°´Å¥
+	//ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½Å¥
 	TSharedPtr<SBorder> ClickedColorBtn;
-	//³¬Á´µÄµã»÷ÊÂ¼þ°´Å¥
+	//ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½Å¥
 	TSharedPtr<SButton> ClickEventBtn;
-	//³¬Á´µÄÐü¸¡ÊÂ¼þ°´Å¥
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½Å¥
 	TSharedPtr<SButton> HoverEventBtn;
-	//³¬Á´metaÊäÈë¿ò
+	//ï¿½ï¿½ï¿½ï¿½metaï¿½ï¿½ï¿½ï¿½ï¿½
 	TSharedPtr<SMultiLineEditableTextBox> HyperMetaInputBox;
 };
 
@@ -163,7 +161,7 @@ struct FRichTextStyleState
 };
 
 /**
- * ¸»ÎÄ±¾
+ * ï¿½ï¿½ï¿½Ä±ï¿½
  * 
  */
 class SExtendRichTextEditorBar final: public SCompoundWidget
@@ -206,32 +204,32 @@ protected:
 	bool IsHyperBtnEnable();
 	bool IsEraserBtnEnable();
 
-	//´ÖÌå°´Å¥
+	//ï¿½ï¿½ï¿½å°´Å¥
 	TSharedPtr<SButtonWithOccupyState> BoldBtn;
-	//Ð±Ìå°´Å¥
+	//Ð±ï¿½å°´Å¥
 	TSharedPtr<SButtonWithOccupyState> ItalicBtn;
-	//ÏÂ»®Ïß°´Å¥
+	//ï¿½Â»ï¿½ï¿½ß°ï¿½Å¥
 	TSharedPtr<SButtonWithOccupyState> UnderLineBtn;
-	//ÑÕÉ«°´Å¥
+	//ï¿½ï¿½É«ï¿½ï¿½Å¥
 	TSharedPtr<SButton> ColorBtn;
-	//×ÖºÅ´óÐ¡Ñ¡Ôñ
+	//ï¿½ÖºÅ´ï¿½Ð¡Ñ¡ï¿½ï¿½
 	TSharedPtr<SEditableTextBox> FontSizeInput;
-	//¸ñÊ½Ë¢
+	//ï¿½ï¿½Ê½Ë¢
 	TSharedPtr<SButtonWithOccupyState> PainterBtn;
-	//²åÈëÍ¼Æ¬
+	//ï¿½ï¿½ï¿½ï¿½Í¼Æ¬
 	TSharedPtr<SButton> InsertImgBtn;
-	//³¬Á´
+	//ï¿½ï¿½ï¿½ï¿½
 	TSharedPtr<SButton> HyperBtn;
-	//ÏðÆ¤²Á
+	//ï¿½ï¿½Æ¤ï¿½ï¿½
 	TSharedPtr<SButton> EraserBtn;
-	//ÑÕÉ«Ñ¡ÔñÃæ°å
+	//ï¿½ï¿½É«Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½
 	TSharedPtr<SMenuAnchor> ColorMenu;
-	//×ÖºÅÑ¡ÔñÏÂÀ­²Ëµ¥
+	//ï¿½Öºï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½
 	TSharedPtr<SMenuAnchor> FontSizeMenu;
 	
 	uint8 CurrentColorIndex = 0;
 	SExtendRichTextEditableBox* EditableBox;
-	//µ±Ç°Ñ¡ÖÐµÄ×ÖÌå×´Ì¬
+	//ï¿½ï¿½Ç°Ñ¡ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬
 	FRichTextStyleState SelectedState;
 };
 
@@ -287,13 +285,12 @@ protected:
 
 	void HandleRichEditableTextCursorMoved(const FTextLocation& NewCursorPosition);
 
-	FReply OnKeyCharHandler(const FGeometry& geo,const FCharacterEvent& event);
-
 	FOnTextChanged OnTextChanged;
 	FOnTextCommitted OnTextCommitted;
-	//¸»ÎÄ±¾±à¼­¹¤¾ßÀ¸
+	//ï¿½ï¿½ï¿½Ä±ï¿½ï¿½à¼­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	TSharedPtr<SExtendRichTextEditorBar> RichTextEditorBar;
 	TSharedPtr<SMultiLineEditableTextBox> RichTextEditBox;
 	TSharedPtr<SHyperLinkBar> HyperLinkBar;
 	FTextBlockStyle CurrentTextStyle;
+	uint8 CurSize;
 };
