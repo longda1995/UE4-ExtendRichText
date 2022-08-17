@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "ExtendRichTextBlockDecorator.h"
-
 #include "ExtendHyperEventHandler.h"
 #include "ExtendRichTextBlock.h"
 #include "ExtendRichTextStyle.h"
@@ -75,7 +74,7 @@ TSharedRef<ISlateRun> FEditableRichTextDecorator::Create(const TSharedRef<FTextL
 			run->ApplyFontSizeMultiplierOnTextStyle(1);
 			return run;
 		}
-		else
+		//else
 		{
 			if(!FExtendRichTextEditBoxStyles::Get().HasWidgetStyle<FHyperlinkStyle>(FName(styleStr)))
 			{
@@ -86,7 +85,7 @@ TSharedRef<ISlateRun> FEditableRichTextDecorator::Create(const TSharedRef<FTextL
 			{
 				if(const IHyperClickInterface* ClickInterface = Cast<IHyperClickInterface>(HyperEventHandler.Get()))
 				{
-					ClickInterface->OnHyperClick(FHyperMeta{Meta});
+					IHyperClickInterface::Execute_OnHyperClick(HyperEventHandler.Get(),FHyperMeta{Meta});
 				}
 			});
 			return FRunCreator::CreateHyperRun(RunInfo,InOutModelText,

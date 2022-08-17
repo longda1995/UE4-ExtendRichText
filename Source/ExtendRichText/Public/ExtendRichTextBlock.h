@@ -23,7 +23,8 @@ class EXTENDRICHTEXT_API IHyperClickInterface
 { 
 	GENERATED_BODY()
 public:
-	virtual void OnHyperClick(const FHyperMeta& Meta)const = 0;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = ClickHandle)
+	void OnHyperClick(const FHyperMeta& Meta)const;
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHyperLinkClick, const FHyperMeta&, MetaData);
@@ -38,6 +39,5 @@ public:
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 	UPROPERTY(BlueprintAssignable,Category = ExtendRichText)
 		FOnHyperLinkClick OnHyperLinkClickFunc;
-protected:
-	void OnHyperClick(const FHyperMeta& Meta)const override;
+	void OnHyperClick_Implementation(const FHyperMeta& Meta)const override;
 };

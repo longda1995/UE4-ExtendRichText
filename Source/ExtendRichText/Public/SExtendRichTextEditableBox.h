@@ -12,10 +12,6 @@ class SExtendRichTextEditableBox;
 class SMultiLineEditableTextBox;
 class SColorBlock;
 class SEditableTextBox;
-/**
- * �ظ�����IsPressed������ʹ֮תΪ�Ƿ�ռ��״̬����
- * �˰�ťȡ��IsPress��ԭ������
- */
 class EXTENDRICHTEXT_API SButtonWithOccupyState : public SCompoundWidget
 {
 public:
@@ -91,17 +87,11 @@ public:
 	void Construct(const FArguments& InArgs);
 
 protected:
-	//������������ɫ��ť
 	TSharedPtr<SBorder> CommonColorBtn;
-	//������������ɫ��ť
 	TSharedPtr<SBorder> HoverColorBtn;
-	//�����ĵ����ɫ��ť
 	TSharedPtr<SBorder> ClickedColorBtn;
-	//�����ĵ���¼���ť
 	TSharedPtr<SButton> ClickEventBtn;
-	//�����������¼���ť
 	TSharedPtr<SButton> HoverEventBtn;
-	//����meta�����
 	TSharedPtr<SMultiLineEditableTextBox> HyperMetaInputBox;
 };
 
@@ -138,13 +128,17 @@ struct FRichTextStyleState
 	
 	friend uint32 SerializeToUint32(const FRichTextStyleState& Other)
 	{
-		return ((uint32)Other.FontSize) << 16 | ((uint32)Other.ColorIndex) << 8 | ((uint32)Other.Bold) << 3 | ((uint32)Other.Italic) << 2 | ((uint32)Other.UnderLine) << 1 | Other.IsText;
+		return ((uint32)Other.FontSize) << 16
+		| ((uint32)Other.ColorIndex) << 8
+		| ((uint32)Other.Bold) << 3
+		| ((uint32)Other.Italic) << 2
+		| ((uint32)Other.UnderLine) << 1
+		| Other.IsText;
 	}
 	
 	static FRichTextStyleState DeserializeFromUint32(uint32 num)
 	{
-		return FRichTextStyleState(num >> 16,num >> 3,num >> 2,num >> 1,num,num >> 8
-		);
+		return FRichTextStyleState(num >> 16,num >> 3,num >> 2,num >> 1,num,num >> 8);
 	}
 	
 	friend uint32 GetTypeHash(const FRichTextStyleState& Other)
@@ -160,10 +154,6 @@ struct FRichTextStyleState
 	uint8 ColorIndex;
 };
 
-/**
- * ���ı�
- * 
- */
 class SExtendRichTextEditorBar final: public SCompoundWidget
 {
 public:
@@ -204,32 +194,20 @@ protected:
 	bool IsHyperBtnEnable();
 	bool IsEraserBtnEnable();
 
-	//���尴ť
 	TSharedPtr<SButtonWithOccupyState> BoldBtn;
-	//б�尴ť
 	TSharedPtr<SButtonWithOccupyState> ItalicBtn;
-	//�»��߰�ť
 	TSharedPtr<SButtonWithOccupyState> UnderLineBtn;
-	//��ɫ��ť
 	TSharedPtr<SButton> ColorBtn;
-	//�ֺŴ�Сѡ��
 	TSharedPtr<SEditableTextBox> FontSizeInput;
-	//��ʽˢ
 	TSharedPtr<SButtonWithOccupyState> PainterBtn;
-	//����ͼƬ
 	TSharedPtr<SButton> InsertImgBtn;
-	//����
-	TSharedPtr<SButton> HyperBtn;
-	//��Ƥ��
+	TSharedPtr<SButtonWithOccupyState> HyperBtn;
 	TSharedPtr<SButton> EraserBtn;
-	//��ɫѡ�����
 	TSharedPtr<SMenuAnchor> ColorMenu;
-	//�ֺ�ѡ�������˵�
 	TSharedPtr<SMenuAnchor> FontSizeMenu;
 	
 	uint8 CurrentColorIndex = 0;
 	SExtendRichTextEditableBox* EditableBox;
-	//��ǰѡ�е�����״̬
 	FRichTextStyleState SelectedState;
 };
 

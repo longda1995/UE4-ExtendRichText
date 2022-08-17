@@ -44,7 +44,8 @@ public class ExtendRichText : ModuleRules
 				"Slate",
 				"SlateCore",
 				"InputCore",
-				"UMG"
+				"UMG",
+				"DesktopPlatform"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

@@ -1,6 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include "SExtendRichTextEditableBox.h"
+#include "DesktopPlatformModule.h"
+#include "EditorDirectories.h"
 #include "ExtendRichTextStyle.h"
 #include "ExtendRichTextBlockDecorator.h"
 #include "ExtendRichTextMarshaller.h"
@@ -17,10 +17,8 @@
 #include "Widgets/Input/SEditableTextBox.h"
 #include "Widgets/Input/SMultiLineEditableTextBox.h"
 #include "Widgets/Layout/SUniformGridPanel.h"
-#include <Developer/DesktopPlatform/Public/DesktopPlatformModule.h>
-#include <Editor/UnrealEd/Public/EditorDirectories.h>
-
 #include "ExtendHyperEventHandler.h"
+#include "ExtendTextRun.h"
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
@@ -183,7 +181,7 @@ void SHyperLinkBar::Construct(const FArguments& InArgs)
 					.Text(FText::FromString("N"))
 				]
 			]
-		+ SHorizontalBox::Slot()
+			+ SHorizontalBox::Slot()
 			.AutoWidth()
 			.VAlign(VAlign_Center)
 			.Padding(btnMargin)
@@ -201,7 +199,7 @@ void SHyperLinkBar::Construct(const FArguments& InArgs)
 					.Text(FText::FromString("H"))
 				]
 			]
-		+ SHorizontalBox::Slot()
+			+ SHorizontalBox::Slot()
 			.AutoWidth()
 			.VAlign(VAlign_Center)
 			.Padding(btnMargin)
@@ -219,7 +217,7 @@ void SHyperLinkBar::Construct(const FArguments& InArgs)
 					.Text(FText::FromString("C"))
 				]
 			]
-		+ SHorizontalBox::Slot()
+			+ SHorizontalBox::Slot()
 			.AutoWidth()
 			.VAlign(VAlign_Center)
 			.Padding(btnMargin)
@@ -231,7 +229,7 @@ void SHyperLinkBar::Construct(const FArguments& InArgs)
 					.Text(FText::FromString("CE"))
 				]
 			]
-		+ SHorizontalBox::Slot()
+			+ SHorizontalBox::Slot()
 			.AutoWidth()
 			.VAlign(VAlign_Center)
 			.Padding(btnMargin)
@@ -257,6 +255,100 @@ void SHyperLinkBar::Construct(const FArguments& InArgs)
 	];
 }
 
+using MetaMap = TMap<FString,FString>;
+class SHyperMetaBlanks : public SCompoundWidget
+{
+public:
+	SLATE_BEGIN_ARGS(SHyperMetaBlanks);
+		SLATE_ARGUMENT(MetaMap&, Map)
+		SLATE_ARGUMENT(TSharedPtr<SMultiLineEditableTextBox>, EditBox)
+	SLATE_END_ARGS()
+	void Construct(const FArguments& InArgs)
+	{
+		ChildSlot
+		[
+			SNew(SVerticalBox)
+			+SVerticalBox::Slot()
+			.AutoHeight()
+			[
+				SNew(SButton)
+				.OnClicked(FOnClicked::CreateLambda([this]
+				{
+					Commit();
+					return FReply::Handled();
+				}))
+				.Text(LOCTEXT("ExtendRichText","Add"))
+			]
+			+SVerticalBox::Slot()
+			.AutoHeight()
+			[
+				SAssignNew(MetaColumn,SVerticalBox)
+			]
+			+SVerticalBox::Slot()
+			.AutoHeight()
+			[
+				SNew(SButton)
+				.Text(LOCTEXT("ExtendRichText","OK"))
+			]
+		];
+	}
+private:
+	void Commit()
+	{
+		TMap<FString,FString> MetaMap;
+		for (const auto BoxPair : AllEditableBoxs)
+		{
+			FString KeyStr = BoxPair.Key->GetText().ToString();
+			FString ValueStr = BoxPair.Value->GetText().ToString();
+			MetaMap.Add(KeyStr,ValueStr);
+		}
+		if(CurrentRun.IsValid())
+		{
+			const FRunInfo& RunInfo = CurrentRun->GetRunInfo();
+		}
+ 	}
+	void AddColumn()
+	{
+		TSharedPtr<SEditableTextBox> KeyBox;
+		TSharedPtr<SEditableTextBox> ValueBox;
+
+		MetaColumn
+		->AddSlot()
+		.MaxHeight(200)
+		[
+			SNew(SHorizontalBox)
+			+SHorizontalBox::Slot()
+			.AutoWidth()
+			[
+				SNew(STextBlock)
+				.Text(LOCTEXT("ExtendRichText","Key"))
+			]
+			+SHorizontalBox::Slot()
+			.FillWidth(200)
+			[
+				SAssignNew(KeyBox,SEditableTextBox)
+				.HintText(LOCTEXT("ExtendRichText","Hint"))
+			]
+			+SHorizontalBox::Slot()
+			.AutoWidth()
+			[
+				SNew(STextBlock)
+				.Text(LOCTEXT("ExtendRichText","Value"))
+			]
+			+SHorizontalBox::Slot()
+			.FillWidth(200)
+			[
+				SAssignNew(ValueBox,SEditableTextBox)
+				.HintText(LOCTEXT("ExtendRichText","Value"))
+			]
+		];
+		AllEditableBoxs.Add(MakeTuple(KeyBox, ValueBox));
+	}
+
+	TArray<TPair<TSharedPtr<SEditableTextBox>, TSharedPtr<SEditableTextBox>>> AllEditableBoxs;
+	TSharedPtr<SVerticalBox> MetaColumn;
+	TSharedPtr<const IRun> CurrentRun;
+};
 
 class SColorPickPanel;
 const FMargin iconPadding = FMargin(2,0);
@@ -432,10 +524,21 @@ void SExtendRichTextEditorBar::Construct(const FArguments& InArgs)
 		.Padding(iconPadding)
 		.AutoWidth()
 		[
-			SAssignNew(HyperBtn,SButton)
-			.ButtonStyle(FExtendRichTextEditBoxStyles::Get(),"InsertHyperLinkBtn")
-			.OnClicked(this,&SExtendRichTextEditorBar::OnHyperBtnClick)
-			.IsEnabled(TAttribute<bool>::Create(TAttribute<bool>::FGetter::CreateSP(this, &SExtendRichTextEditorBar::IsHyperBtnEnable)))
+			SNew(SOverlay)
+			+SOverlay::Slot()
+			.VAlign(VAlign_Center)
+			[
+				SAssignNew(HyperBtn,SButtonWithOccupyState)
+				.StyleName("InsertHyperLinkBtn")
+				.OnClicked(FOnClicked::CreateSP(this,&SExtendRichTextEditorBar::OnHyperBtnClick))
+				.IsEnabled(TAttribute<bool>::Create(TAttribute<bool>::FGetter::CreateSP(this, &SExtendRichTextEditorBar::IsHyperBtnEnable)))
+			]
+			+SOverlay::Slot()
+			.VAlign(VAlign_Bottom)
+			[
+				SNew(SMenuAnchor)
+				.MenuContent(SNew(STextBlock))
+			]
 		]
 	];
 }
@@ -461,6 +564,7 @@ void SExtendRichTextEditorBar::SetCurrentStyleState(const FRichTextStyleState& s
 	BoldBtn->SetOccupied(state.Bold);
 	ItalicBtn->SetOccupied(state.Italic);
 	UnderLineBtn->SetOccupied(state.UnderLine);
+	HyperBtn->SetOccupied(!state.IsText);
 	CurrentColorIndex = state.ColorIndex;
 	int size = FCString::Atoi(*FontSizeInput->GetText().ToString());
 	if(size != state.FontSize)
@@ -1021,7 +1125,6 @@ void SExtendRichTextEditableBox::HandleRichEditableTextCursorMoved(const FTextLo
 	if(GetSelectedRuns().Num() > 0)
 	{
 		auto selectedRun = GetSelectedRuns()[0];
-		//todo:����
 	}
 	else
 	{
@@ -1031,13 +1134,12 @@ void SExtendRichTextEditableBox::HandleRichEditableTextCursorMoved(const FTextLo
 			const TMap<FString, FString>& meta = run->GetRunInfo().MetaData;
 			uint32 serializedNum;
 			LexFromString(serializedNum, *meta[TEXT("Style")]);
-			FRichTextStyleState state = FRichTextStyleState::DeserializeFromUint32(serializedNum);
+			const FRichTextStyleState state = FRichTextStyleState::DeserializeFromUint32(serializedNum);
 			RichTextEditorBar->SetCurrentStyleState(state);
 		}
 		else
 		{
 			FRichTextStyleState state((uint8)setting -> TextDefaultSize,false,false,false,true,0);
-
 			RichTextEditorBar->SetCurrentStyleState(state);
 		}
 	}

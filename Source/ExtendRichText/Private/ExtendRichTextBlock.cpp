@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "ExtendRichTextBlock.h"
 #include "ExtendRichTextBlockDecorator.h"
 #include "ExtendRichTextMarshaller.h"
@@ -26,7 +23,7 @@ TSharedRef<SWidget> UExtendRichTextBlock::RebuildWidget()
 	return MyRichTextBlock.ToSharedRef();
 }
 
-void UExtendRichTextBlock::OnHyperClick(const FHyperMeta& Meta)const
+void UExtendRichTextBlock::OnHyperClick_Implementation(const FHyperMeta& Meta)const
 {
 	OnHyperLinkClickFunc.Broadcast(Meta);
 }
